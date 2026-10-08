@@ -1,0 +1,40 @@
+// Medical Diagnosis scenario (educational toy expert system, NOT medical advice)
+export const medical = {
+  id: 'medical',
+  title: 'Medical Diagnosis',
+  icon: '🏥',
+  question: 'Can the Knowledge Base identify the condition?',
+  disclaimer: 'Educational toy rule system with fictional cases. Not medical advice.',
+  symptoms: [
+    { id: 'fever', label: 'Fever' },
+    { id: 'cough', label: 'Cough' },
+    { id: 'headache', label: 'Headache' },
+    { id: 'fatigue', label: 'Fatigue' },
+    { id: 'rash', label: 'Rash' },
+    { id: 'sore_throat', label: 'Sore throat' },
+    { id: 'itchy_skin', label: 'Itchy skin' },
+    { id: 'stiff_neck', label: 'Stiff neck' },
+  ],
+  rules: [
+    { id: 'R1', if: ['fever', 'cough'], then: 'respiratory_infection', explain: 'Fever together with cough suggests a respiratory infection.' },
+    { id: 'R2', if: ['respiratory_infection', 'sore_throat'], then: 'possible_flu', explain: 'A respiratory infection plus sore throat points to possible flu.' },
+    { id: 'R3', if: ['fever', 'rash'], then: 'possible_measles', explain: 'Fever with a rash points to possible measles in this toy system.' },
+    { id: 'R4', if: ['cough', 'sore_throat'], then: 'throat_infection', explain: 'Cough with sore throat suggests a throat infection.' },
+    { id: 'R5', if: ['rash', 'itchy_skin'], then: 'possible_allergy', explain: 'Rash with itching suggests a possible allergic reaction.' },
+    { id: 'R6', if: ['possible_flu', 'fatigue'], then: 'advise_rest', explain: 'Possible flu with fatigue leads to a rest recommendation.' },
+    { id: 'R7', if: ['fever', 'headache', 'stiff_neck'], then: 'urgent_review', explain: 'This symptom trio flags the case for urgent clinician review.' },
+  ],
+  goals: ['possible_flu', 'possible_measles', 'throat_infection', 'possible_allergy', 'advise_rest', 'urgent_review'],
+  conditions: ['possible_flu', 'possible_measles', 'possible_allergy', 'throat_infection', 'respiratory_infection'],
+  flags: ['urgent_review', 'advise_rest'],
+  conflicts: [],
+  // Symptom toggles -> facts (the engine only ever sees facts)
+  toFacts: (sel) => sel,
+  describe: (fact) => `Possible condition according to this toy rule system: ${fact.replace(/_/g, ' ')}`,
+  challenges: [
+    { id: 'med-1', level: 'Beginner', facts: ['fever', 'cough'], goal: 'respiratory_infection', mode: 'forward', prompt: 'Fever and cough are known. What is derived?' },
+    { id: 'med-2', level: 'Intermediate', facts: ['fever', 'cough', 'sore_throat'], goal: 'possible_flu', mode: 'forward', prompt: 'Two rules chain together. What is the final conclusion?' },
+    { id: 'med-3', level: 'Advanced', facts: ['fever', 'cough', 'sore_throat', 'fatigue'], goal: 'advise_rest', mode: 'backward', prompt: 'Prove advise_rest. Which rules form the chain?' },
+    { id: 'med-4', level: 'Expert', facts: ['fever', 'rash', 'itchy_skin', 'cough', 'sore_throat'], goal: 'possible_measles', mode: 'backward', prompt: 'Several rules apply. Which one proves the goal?' },
+  ],
+};
